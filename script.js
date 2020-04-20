@@ -82,7 +82,7 @@ function userchoice() {
 } showquestion();
 
 function quiztimer() {
-   // overalltimer--;
+    overalltimer--;
     timerEl.textContent = overalltimer;
     if (overalltimer <= 0) {
         clearInterval(intervalId);
