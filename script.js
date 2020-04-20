@@ -1,15 +1,21 @@
 var questions = [
     {
-        question: "Commonly used data types DO NOT include:",
-        choices: ["strings", "booleans", "alerts", "numbers"],
-        answer: "alerts",
+        question: "what is the capital of New Jersey",
+        choices: ["New Jersey state","Trenton","Hackensack","Newark"],
+        answer: "Trenton",
     },
     {
         question:
-            "The condition in an if / else statement is enclosed within ____.",
-        choices: ["quotes", "curly brackets", "parentheses", "square brackets"],
-        answer: "parentheses",
+            "what is the capital of New York",
+        choices: ["Albany","New York City","Brooklyn","Mexico"],
+        answer: "Albany",
     },
+    {
+    question:
+    "which is a fruit",
+choices: ["Avocado","Kale","Carrots","Broccoli"],
+answer: "Avocado",
+},
 ];
 
 var questionEl = document.querySelector("#question");
@@ -23,7 +29,7 @@ var overalltimer = 16;
 var timer = 5;
 var questionIndex = 0;
 var Count = 0;
-
+var intervalId;
 
 
 
@@ -34,7 +40,7 @@ function showquestion() {
         return;
     }
 
-    var intervalId = setInterval(quiztimer, 1500);
+     intervalId = setInterval(quiztimer, 1500);
     questionEl.textContent = questions[questionIndex].question;
     var choice = questions[questionIndex].choices;
     optionEl.innerHTML = "";
@@ -59,6 +65,7 @@ function next() {
 optionEl.addEventListener("click", userchoice);
 
 function userchoice() {
+    clearInterval(intervalId);
     if (event.target.matches("li")) { //in this line and in line 47 i did look at the code that we did in class
         answers = event.target.textContent;//because i was not able to get the right answer to say correct. 
         if (answers === questions[questionIndex].answer) { //the funtion went directly to the else statement
@@ -79,40 +86,35 @@ function quiztimer() {
     overalltimer--;
     timerEl.textContent = overalltimer;
     if (overalltimer <= 0) {
-        
+        clearInterval(intervalId);
          document.body.innerHTML = "you have scored; " + Count;
          setTimeout(highscore, 2);
 
     }
 }
 
-
-
-
-function highscore() {
-    var name = prompt("pleae enter your name ");
+function highscore (){
+    var name = prompt("Please enter your name");
 
     var high_scores = localStorage.getItem("scores");
-
+  
     if (!high_scores) {
-        high_scores = [];
+      high_scores = [];
     } else {
-        high_scores = JSON.parse(high_scores);
+      high_scores = JSON.parse(high_scores);
     }
-
+  
     high_scores.push({ name: name, score: Count });
-
+  
     localStorage.setItem("scores", JSON.stringify(high_scores));
-
+  
     high_scores.sort(function (a, b) {
-        return b.score - a.score;
+      return b.score - a.score;
     });
-    if(contentLI>10){
-        localStorage.clear();
-    }
+  
     var contentUL = document.createElement("ul");
-
-    for (var i = 10; i > high_scores.length; i++) {
+  
+    for (var i = 0; i < high_scores.length; i++) {
       var contentLI = document.createElement("li");
       contentLI.textContent =
         "Name: " + high_scores[i].name + " Score: " + high_scores[i].score;
@@ -121,6 +123,9 @@ function highscore() {
   
     document.body.appendChild(contentUL);
 }
+
+
+
 
 
 
