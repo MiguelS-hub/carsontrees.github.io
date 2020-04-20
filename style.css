@@ -1,0 +1,26 @@
+.body{
+   text-align: left ;
+   position: relative;
+   background-color: black;
+   
+}
+
+
+
+.botton{
+    border: solid white;
+    
+    color:white;
+    width: 420px;
+    text-align: center;
+   
+}
+.timer{
+    float: right;
+    color:white;
+}
+.questions{
+    color: white;
+}
+
+

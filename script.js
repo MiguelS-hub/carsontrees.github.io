@@ -66,9 +66,8 @@ optionEl.addEventListener("click", userchoice);
 
 function userchoice() {
     clearInterval(intervalId);
-    if (event.target.matches("li")) { //in this line and in line 47 i did look at the code that we did in class
-        answers = event.target.textContent;//because i was not able to get the right answer to say correct. 
-        if (answers === questions[questionIndex].answer) { //the funtion went directly to the else statement
+    if (event.target.matches("li")) { 
+        if (answers === questions[questionIndex].answer) { 
             ResultEl.textContent = "correct"
             Count++;
         }
@@ -83,7 +82,7 @@ function userchoice() {
 } showquestion();
 
 function quiztimer() {
-    overalltimer--;
+   // overalltimer--;
     timerEl.textContent = overalltimer;
     if (overalltimer <= 0) {
         clearInterval(intervalId);
