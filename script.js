@@ -70,7 +70,7 @@ $(document).ready(function() {
     };
 
     function questionsScreen() {
-        $("#display").html("<div id='questions-screen'><div id='header'>Time remaining: <span id='time'>30</span></div><div id='question'></div><div id='container'></div></div>");
+        $("#display").html("<div id='questions-screen'><div id='header'>Time remaining: <span id='time'>7</span></div><div id='question'></div><div id='container'></div></div>");
         generateQuestion();
         timer();
         $("#correctpic").hide();
@@ -79,7 +79,7 @@ $(document).ready(function() {
     };
 
     function finalScreen() {
-        $("#display").html("<div id='final-screen'><div id='final'>All done, here's how you did!</div><div>Correct Answers: <span id='correct'></span></div><div>Incorrect Answers: <span id='incorrect'></span></div><div>Unanswered: <span id='unanswered'></span></div><div id='reset'>Start Over?</div></div>");
+        $("#display").html("<div id='final-screen'><div id='final'>All done, here's how you did!</div><div>Correct Answers: <span id='correct'></span></div><div>Incorrect Answers: <span id='incorrect'></span></div><div>Unanswered: <span id='unanswered'></span></div><div id='high_score' class='high_score_background'>High score</div><div id='reset'>Start Over?</div></div>");
         $("#correct").html(amountCorrect);
         $("#incorrect").html(amountWrong);
         $("#unanswered").html(unanswered);
@@ -89,6 +89,13 @@ $(document).ready(function() {
         $("#reset").on("click", function() {
             startScreen();
         });
+        $("#high_score").on("click",function(){
+            var body =document.body;
+            body.innerHTML = "Your Score " + amountCorrect;
+
+            high_score();
+        }
+        )
     };
     var questionTime;
 
@@ -151,5 +158,37 @@ $(document).ready(function() {
 
         });
     }
+    function high_score(){
+        var name = prompt("Please enter your name");
+
+  var high_scores = localStorage.getItem("scores");
+
+  if (!high_scores) {
+    high_scores = [];
+  } else {
+    high_scores = JSON.parse(high_scores);
+  }
+
+  high_scores.push({ name: name, score: amountCorrect });
+
+  localStorage.setItem("scores", JSON.stringify(high_scores));
+
+  high_scores.sort(function (a, b) {
+    return b.score - a.score;
+  });
+
+  var contentUL = document.createElement("ul");
+
+  for (var i = 0; i < high_scores.length; i++) {
+    var contentLI = document.createElement("li");
+    contentLI.textContent =
+      "Name: " + high_scores[i].name + " Score: " + high_scores[i].score;
+    contentUL.appendChild(contentLI);
+  }
+
+  document.body.appendChild(contentUL);
+};
+
+    
 
 })

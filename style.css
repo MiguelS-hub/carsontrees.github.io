@@ -70,14 +70,25 @@ body {
 	line-height: 50px;
 }
 .selection:hover {
-	background-color: #FFE4C4;
+	background-color: red;
 	width: 350px;
 	margin: auto;
 	border: 1px solid black;
 }
 #reset:hover {
-	background-color: #FFE4C4;
+	background-color: red;
 	width: 350px;
 	margin: auto;
 	border: 1px solid black;
 }
+#high_score:hover {
+	background-color: red;
+	width: 350px;
+	margin: auto;
+	border: 1px solid black;
+}
+.high_score_background{
+    background-color: black;
+    color: white;
+    
+}   
