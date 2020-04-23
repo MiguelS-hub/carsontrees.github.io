@@ -1,131 +1,155 @@
-var questions = [
-    {
-        question: "what is the capital of New Jersey",
-        choices: ["New Jersey state","Trenton","Hackensack","Newark"],
-        answer: "Trenton",
-    },
-    {
-        question:
-            "what is the capital of New York",
-        choices: ["Albany","New York City","Brooklyn","Mexico"],
-        answer: "Albany",
-    },
-    {
-    question:
-    "which is a fruit",
-choices: ["Avocado","Kale","Carrots","Broccoli"],
-answer: "Avocado",
-},
-];
+var amountCorrect = 0;
+var amountWrong = 0;
+var unanswered = 0;
+var number = 0;
+var questions = [];
+var time = 7;
 
-var questionEl = document.querySelector("#question");
-var optionEl = document.querySelector("#option-list");
-var ResultEl = document.querySelector("#question-result");
-var timerEl = document.querySelector("#timer");
-var body = document.querySelector("#body");
+questions[0] = {
+    question: "What is pikachu's last evolution?",
+    answers: ["Raichu", "Pichu", "Pika Pika", "Electrode"],
+    correctIndex: 0,
+};
 
-var answers;
-var overalltimer = 16;
-var timer = 5;
-var questionIndex = 0;
-var Count = 0;
-var intervalId;
+questions[1] = {
+    question: "Who is Ash's main pokemon?",
+    answers: ["Bulbasaur", "Squirtle", "Pikachu", "Charmander"],
+    correctIndex: 2,
+};
+
+questions[2] = {
+    question: "What is the name of the talking cat in pokemon?",
+    answers: ["wobbuffet", "Meowth", "Victreebel", "Magikarp"],
+    correctIndex: 1,
+};
+
+questions[3] = {
+    question: "If you're facing a Magmar in battle, which of these attacks should your Pokemon use?",
+    answers: ["Hyper Beam", "Earthquake", "Splash", "Solar Beam"],
+    correctIndex: 1,
+};
 
 
 
+$(document).ready(function() {
 
-function showquestion() {
-    if (overalltimer == 0) {
-        quiztimer();
-        return;
-    }
 
-     intervalId = setInterval(quiztimer, 1500);
-    questionEl.textContent = questions[questionIndex].question;
-    var choice = questions[questionIndex].choices;
-    optionEl.innerHTML = "";
-    ResultEl.innerHTML = "";
+    startScreen();
+    $("#correctpic").hide();
+    $("#incorrectpic").hide();
+    $("#outoftimepic").hide();
 
-    for (i = 0; i < choice.length; i++) {
-        var listitems = document.createElement("li");
-        listitems.textContent = choice[i];
-        optionEl.append(listitems);
 
-    }
-}
-function next() {
-    questionIndex++;
 
-    if (questionIndex === questions.length) {
-        overalltimer = 0;
-    }
-    showquestion();
-}
+    function startScreen() {
+        number = 0;
+        $("#display").html("<div id='start-screen'><div id='start'>Start</div></div>");
+        $("#start").on("click", function() {
+            questionsScreen();
+            amountCorrect = 0;
+            amountWrong = 0;
+            unanswered = 0;
+        });
+    };
 
-optionEl.addEventListener("click", userchoice);
+    function correctScreen() {
+        $("#display").html("<div class='transitions'>Got To Catch Them All!</div>");
+        transition();
+    };
 
-function userchoice() {
-    clearInterval(intervalId);
-    if (event.target.matches("li")) { 
-        if (answers === questions[questionIndex].answer) { 
-            ResultEl.textContent = "correct"
-            Count++;
+    function incorrectScreen() {
+        $("#display").html("<div class='transitions'>No Sir!</div><div class='transitions'>The Correct Answer was: <span id='actual-answer'></span></div>");
+        transition();
+        $("#actual-answer").html(actualAnswer)
+    };
+
+    function outOfTime() {
+        $("#display").html("<div class='transitions'>Wake up!</div><div class='transitions'>The Correct Answer was: <span id='actual-answer'></span></div>");
+        transition();
+        $("#actual-answer").html(actualAnswer)
+    };
+
+    function questionsScreen() {
+        $("#display").html("<div id='questions-screen'><div id='header'>Time remaining: <span id='time'>30</span></div><div id='question'></div><div id='container'></div></div>");
+        generateQuestion();
+        timer();
+        $("#correctpic").hide();
+        $("#incorrectpic").hide();
+        $("#outoftimepic").hide();
+    };
+
+    function finalScreen() {
+        $("#display").html("<div id='final-screen'><div id='final'>All done, here's how you did!</div><div>Correct Answers: <span id='correct'></span></div><div>Incorrect Answers: <span id='incorrect'></span></div><div>Unanswered: <span id='unanswered'></span></div><div id='reset'>Start Over?</div></div>");
+        $("#correct").html(amountCorrect);
+        $("#incorrect").html(amountWrong);
+        $("#unanswered").html(unanswered);
+        $("#correctpic").hide();
+        $("#incorrectpic").hide();
+        $("#outoftimepic").hide();
+        $("#reset").on("click", function() {
+            startScreen();
+        });
+    };
+    var questionTime;
+
+    function timer() {
+        questionTime = setInterval(function() {
+            time--;
+            $("#time").html(time);
+            if (time === 0) {
+                unanswered++;
+                number++;
+                outOfTime();
+                clearInterval(questionTime);
+                time = 7;
+                $("#outoftimepic").show();
+            };
+        }, 1000);
+    };
+
+    function transition() {
+        var transitionTime = setTimeout(function() {
+            if (number === 4) {
+                finalScreen();
+            } else {
+                questionsScreen();
+            };
+
+        }, 3500);
+    };
+
+    var actualAnswer;
+
+    function generateQuestion() {
+        var correctLocation = questions[number].correctIndex;
+        actualAnswer = questions[number].answers[correctLocation];
+        $("#question").html(questions[number].question);
+        for (var i = 0; i < 4; i++) {
+            $("#container").append("<div class='selection' data-answer-index= " + i + ">" + questions[number].answers[i] + "</div>");
         }
-        else {
-            ResultEl.textContent = "incorrect, -5 seconds"
-            overalltimer = overalltimer - 5;
-            timerEl.textContent = overalltimer;
-        }
-        setTimeout(next, 1000);
 
+        $("#container").on("click", ".selection", function() {
+            clearInterval(questionTime);
+            var answerIndex = ($(this).data("answer-index"));
+            number++;
+
+
+
+            if (answerIndex === correctLocation) {
+                amountCorrect++;
+                correctScreen();
+                time = 7;
+                $("#correctpic").show();
+
+            } else {
+                amountWrong++;
+                incorrectScreen();
+                time = 7;
+                $("#incorrectpic").show();
+
+            };
+
+        });
     }
-} showquestion();
 
-function quiztimer() {
-    overalltimer--;
-    timerEl.textContent = overalltimer;
-    if (overalltimer <= 0) {
-        clearInterval(intervalId);
-         document.body.innerHTML = "you have scored; " + Count;
-         setTimeout(highscore, 2);
-
-    }
-}
-
-function highscore (){
-    var name = prompt("Please enter your name");
-
-    var high_scores = localStorage.getItem("scores");
-  
-    if (!high_scores) {
-      high_scores = [];
-    } else {
-      high_scores = JSON.parse(high_scores);
-    }
-  
-    high_scores.push({ name: name, score: Count });
-  
-    localStorage.setItem("scores", JSON.stringify(high_scores));
-  
-    high_scores.sort(function (a, b) {
-      return b.score - a.score;
-    });
-  
-    var contentUL = document.createElement("ul");
-  
-    for (var i = 0; i < high_scores.length; i++) {
-      var contentLI = document.createElement("li");
-      contentLI.textContent =
-        "Name: " + high_scores[i].name + " Score: " + high_scores[i].score;
-      contentUL.appendChild(contentLI);
-    }
-  
-    document.body.appendChild(contentUL);
-}
-
-
-
-
-
-
-
+})
