@@ -91,9 +91,10 @@ $(document).ready(function() {
         });
         $("#high_score").on("click",function(){
             var body =document.body;
-            body.innerHTML = "Your Score " + amountCorrect;
-
+            body.innerHTML = "Your Score " + amountCorrect +  resetinhigh();
+        
             high_score();
+           
         }
         )
     };
@@ -158,6 +159,16 @@ $(document).ready(function() {
 
         });
     }
+    
+function resetinhigh(){
+    $("#display").html("<div id='reset'>Start Over?</div><div id='clear'>clear highscores</div>")
+    $("#reset").on("click", function() {
+            startScreen();
+        });
+        $("#clear").on("click", function(){
+            localStorage.clear();
+        })
+}
     function high_score(){
         var name = prompt("Please enter your name");
 
@@ -175,6 +186,7 @@ $(document).ready(function() {
 
   high_scores.sort(function (a, b) {
     return b.score - a.score;
+    
   });
 
   var contentUL = document.createElement("ul");
@@ -187,8 +199,8 @@ $(document).ready(function() {
   }
 
   document.body.appendChild(contentUL);
+  
+ 
 };
-
-    
 
 })
